@@ -3,18 +3,19 @@
 Habillage de [CryptPad](https://cryptpad.org) pour les **docs DigiLang** (`docs.digilang.fr`), la suite
 bureautique chiffrée proposée aux enseignants de [DigiLang](https://www.digilang.fr).
 
-Ce dépôt ne contient que le dossier `customize/` de CryptPad : CryptPad sert un fichier de `customize/` à la place
-de son homonyme de `customize.dist/`. Le code de CryptPad lui-même n'est pas modifié.
+Ce dépôt contient le dossier `customize/` de CryptPad (CryptPad sert un fichier de `customize/` à la place de son
+homonyme de `customize.dist/`), les valeurs du thème (`theme/`) et `installer.sh`, qui copie le tout dans CryptPad. Le
+code de CryptPad lui-même n'est pas modifié.
 
 CryptPad est un logiciel libre de XWiki SAS et de ses contributeurs, sous licence GNU AGPL 3.0 ; ce dépôt suit la
 même licence. Figtree est sous licence SIL Open Font License 1.1 (`customize/fonts/Figtree-OFL.txt`).
 
 ## Ce qui change
 
-| Fichier | Rôle |
+| Fichier (dans `customize/` sauf `theme/`) | Rôle |
 |---|---|
-| `src/less2/include/colortheme.less` | Thème clair : importe celui de CryptPad, puis teal `#1F7A70` (liens, titres), terracotta `#C7431D` (boutons principaux), fond `#F4F6F5`, police Figtree. |
-| `src/less2/include/colortheme-dark.less` | Thème sombre, même principe, teal éclairci. |
+| `theme/clair.less` | Thème clair : teal `#1F7A70` (liens, titres), terracotta `#C7431D` (boutons principaux), fond `#F4F6F5`, police Figtree. |
+| `theme/sombre.less` | Thème sombre, teal éclairci. |
 | `src/less2/include/font.less` | Déclare Figtree ; masque le lien « Fonctionnalités » (offres de cryptpad.fr). |
 | `fonts/IBMPlexMono-Medium.woff2` | **Figtree Bold** sous le nom de la police des titres de CryptPad : les titres passent en Figtree, écran de chargement compris. |
 | `fonts/Figtree-*.woff2` | Figtree, hébergée sur le serveur (aucune police chargée ailleurs). |
@@ -28,18 +29,24 @@ toujours à côté du mot « CryptPad » (pied de page, menu « À propos », ch
 Le nom (« Docs DigiLang ») et la description de l'instance se règlent dans l'administration de CryptPad, pas ici.
 **Ne pas envoyer de logo depuis l'administration** : il serait écrit dans `customize/` et effacé à la mise à jour suivante.
 
+Les thèmes ne sont pas des fichiers de `customize/` : `installer.sh` fabrique `colortheme.less` et
+`colortheme-dark.less` en copiant ceux de la version installée de CryptPad, puis en ajoutant à la fin les valeurs de
+`theme/` (en LESS, la dernière définition d'une variable gagne). Une première version qui importait le thème de CryptPad
+avec `@import` cassait la page d'administration (« variable @cp_shadow-color is undefined »).
+
 ## Installer ou mettre à jour
 
 Sur le serveur, en tant que `cryptpad` (voir le guide du VPS de DigiLang, `docs/vps/03-digilang-docs.md`, section 3.11) :
 
 ```
 cd ~/cryptpad-digilang && git pull
-rsync -a ~/cryptpad-digilang/customize/ ~/cryptpad/customize/
+bash ~/cryptpad-digilang/installer.sh
 cd ~/cryptpad && npm run build
 ```
 
 puis `sudo systemctl restart cryptpad`.
 
-Après une mise à jour de CryptPad, vérifier que les fichiers remplacés existent toujours dans `customize.dist`
-(`font.less`, `IBMPlexMono-Medium.woff2`, `CryptPad_logo_hero.svg`, `application_config.js`) et comparer
-`customize.dist/src/less2/include/font.less` avec celui de ce dépôt.
+**Après chaque mise à jour de CryptPad**, relancer `installer.sh` (les thèmes suivent la nouvelle version), puis vérifier
+que les fichiers remplacés existent toujours dans `customize.dist` (`font.less`, `IBMPlexMono-Medium.woff2`,
+`CryptPad_logo_hero.svg`, `application_config.js`) et comparer `customize.dist/src/less2/include/font.less` avec celui
+de ce dépôt.
