@@ -1,0 +1,49 @@
+/*
+ * SPDX-FileCopyrightText: 2023 XWiki CryptPad Team <contact@cryptpad.org> and contributors
+ *
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ *
+ * Docs DigiLang : Figtree (police de DigiLang, SIL OFL 1.1) pour tout le texte.
+ * Les titres de CryptPad utilisent la famille « IBM Plex Mono » : le fichier
+ * fonts/IBMPlexMono-Medium.woff2 de ce dossier est en réalité Figtree Bold, ce qui
+ * remplace aussi les titres de l'écran de chargement (pre-loading.css).
+ */
+
+.font_main () {
+    --LessLoader_require: LessLoader_currentFile();
+}
+
+@font-face {
+    font-family: 'Figtree';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/customize/fonts/Figtree-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: 'Figtree';
+    font-style: normal;
+    font-weight: 600 800;
+    font-display: swap;
+    src: url("/customize/fonts/Figtree-Bold.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 500;
+    src: url("/customize/fonts/IBMPlexMono-Medium.woff2") format("woff2"); }
+
+// Fonts need to go on the global scope
+@font-tools {
+    font-family: CryptPadTools;
+    src: url("/customize/fonts/cryptpadtools.ttf");
+}
+
+@import (once) '/customize/fonts/open-sans.less';
+
+// La page « Fonctionnalités » présente les offres de cryptpad.fr, sans objet ici.
+nav.navbar a.nav-link[href="/features.html"] {
+    display: none;
+}
